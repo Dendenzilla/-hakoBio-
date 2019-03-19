@@ -1,6 +1,12 @@
 <template>
   <div class="chatbot">
-    <div class="robotHead"></div>
+    <div class="hako_title">
+      <p>Hako</p>
+      <p>T</p>
+    </div>
+    <div class="robotHead">
+      <img src="../assets/hako-happy.png">
+    </div>
     <div class="chat">
       <div class="bubble bot">
         <p>OKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK</p>
@@ -36,7 +42,7 @@
     <div class="mouth">
       <form action>
         <textarea rows="3" v-model="userQ" placeholder="Type your question here"></textarea>
-        <button @click.prevent="post()">TEXTE</button>
+        <button @click.prevent="post()">Ask Hako</button>
       </form>
     </div>
   </div>
@@ -71,20 +77,18 @@ import axios from "axios";
 export default {
     data() {
         return {
-            userQ: 'hakobio',
+            userQ: '',
             questions: ''
         }
     },
     name:'Chatbot',
     created() {
-        console.log('test')
         var headers = {
             'Content-Type': 'application/json',
             'Authorization': 'EndpointKey afdff838-d95c-40d3-a32d-b0488a1ee7e5' 
         }
         axios.post("https://qnabxl.azurewebsites.net/qnamaker/knowledgebases/09ae110d-19ea-407c-bbea-0c4cdf8383f3/generateAnswer",{"question":"What is hakobio"} ,{headers: headers} ).then(response => {
             this.questions = response.data;
-            console.log('test2')
         })
     }
 }
@@ -98,16 +102,27 @@ export default {
   width: 300px;
   margin: 0 auto;
   border-radius: 6px 6px 0 0;
-  background-color: #e0e6e8;
-  padding-top: 30px;
+  background-color: #d3d7d8;
 }
 .robotHead {
   position: absolute;
-  top: -20px;
-  left: 20px;
-  height: 40px;
-  width: 40px;
-  background-color: blue;
+  top: -35px;
+  left: 6px;
+  height: 60px;
+  width: 60px;
+  & img {
+    width: 100%;
+  }
+}
+.hako_title {
+  margin: 0 auto;
+  padding: 10px;
+  width: 200px;
+  text-align: center;
+  font-size: 13px;
+  & p {
+    margin: 0;
+  }
 }
 .chat {
   overflow-y: scroll;
@@ -117,6 +132,8 @@ export default {
   align-items: baseline;
   padding: 0 12px;
   width: 276px;
+  border-top: 2px solid rgb(208, 210, 211);
+  background-color: #e0e6e8;
 }
 .bot {
   background-color: #00b3b3;
