@@ -52,31 +52,26 @@ export default {
     name:'Chatbot',
     methods: {
         post() {
-            this.chatlog.push({text:this.question.trim(), type:'Q'});
+          //if (this.question.length > 1) {
+            let userQ = this.question;
+            this.question = '';
+            this.chatlog.push({text:userQ.trim(), type:'Q'});
             this.sleeping = false;
             this.thinking = true;
-            console.log(this.thinking);
-
             this.$nextTick(() => {
                       this.scrollToEnd();
                     })
-            axios.get("https://apihakobot.azurewebsites.net/api/values?question="+this.question).then(response => {
+            axios.get("https://apihakobot.azurewebsites.net/api/values?question="+userQ).then(response => {
                 let botAnswer = response.data;
                 setTimeout(() => {
                   this.thinking = false;
-                  if (this.question.length > 1) {
-                  this.question = '';
-                  this.chatlog.push({text:botAnswer, type:'R'});
-                  } else {
-                    this.question = '';
-                    this.chatlog.push({text:'How about you actually submit a question, genius.', type:'R'});
-                    
-                    
-                  }
+                  this.chatlog.push({text:botAnswer[0]+botAnswer[1], type:'R'});
                   this.$nextTick(() => {
                       this.scrollToEnd();
                     })
-              }, 3000)
+                    
+              }, 800)
+
             })
             
             
