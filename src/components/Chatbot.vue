@@ -5,6 +5,7 @@
     </div>
     <div class="robotHead">
       <img src="../assets/hako-happy.png">
+      <img class="hidden" src="../assets/hako-unhappy.png" alt="">
     </div>
     <div class="chat">
       <div v-for="(c,index) in chatlog" :key="index" class="tdiv" v-show="c.text">
@@ -21,9 +22,9 @@
       </div>
     </div>
     <div class="mouth">
-      <form action>
-        <textarea rows="3" v-model="question" placeholder="Type your question here"></textarea>
-        <button @click.prevent="post()">Ask <br>Hako</button>
+      <form>
+        <textarea rows="3" v-model="question" v-on:keyup.enter="post()" placeholder="Type your question here"></textarea>
+        <button @click.prevent="post()" >Ask <br>Hako</button>
       </form>
     </div>
   </div>
@@ -36,7 +37,7 @@ export default {
     data() {
         return {
           chatlog: [{
-            text:`Hi I'm Hako ! Can I help you ?'`,
+            text:`Hi I'm Hako ! Can I help you ?`,
             type:'R'
           }
           ],
@@ -45,16 +46,21 @@ export default {
     },
     name:'Chatbot',
     methods: {
-        post() { 
-          this.chatlog.push({text:this.question, type:'Q'});
+        post() {
+            this.chatlog.push({text:this.question.trim(), type:'Q'});
             var headers = {
                 'Content-Type': 'application/json',
                 'Authorization': 'EndpointKey afdff838-d95c-40d3-a32d-b0488a1ee7e5' 
             }
             axios.post("https://qnabxl.azurewebsites.net/qnamaker/knowledgebases/09ae110d-19ea-407c-bbea-0c4cdf8383f3/generateAnswer", {"question":this.question} ,{headers: headers} ).then(response => {
                 let botAnswer = response.data;
-                this.question = '';
-                this.chatlog.push({text:botAnswer.answers[0].answer, type:'R'});
+                  if (this.question.length > 1) {
+                  this.question = '';
+                  this.chatlog.push({text:botAnswer.answers[0].answer, type:'R'});
+                  } else {
+                    this.question = '';
+                    this.chatlog.push({text:'How about you actually submit a question, genius.', type:'R'});
+                  }
             })
         }
     }
@@ -101,7 +107,7 @@ export default {
 .chat {
   overflow-y: scroll;
   height: 325px;
-  padding: 0 12px;
+  padding: 5px 12px 0 12px;
   width: 276px;
   border-top: 2px solid rgb(208, 210, 211);
   background-color: #e0e6e8;
@@ -138,7 +144,7 @@ textarea {
   resize: none;
   font-family: Montserrat;
   border-color:transparent;
-  border-radius: 15px 0 0 15px;
+  border-radius: 8px 0 0 8px;
   padding:5px;
   // box-shadow: 3px 5px 15px #e0e6e8 inset;
 }
@@ -150,7 +156,7 @@ textarea:focus{
 button{
   color: #fff;
   background:#0b1927;
-  border-radius: 0 15px 15px 0;
+  border-radius: 0 8px 8px 0;
   border: 1px solid #0b1927;
   cursor: pointer;
 }
@@ -166,5 +172,9 @@ button:hover{
   border-top: 2px solid rgb(208, 210, 211);
   padding: 12px 0;
   background-color: #e0e6e8;
+}
+
+.hidden{
+  display: none;
 }
 </style>
