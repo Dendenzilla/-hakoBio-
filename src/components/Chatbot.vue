@@ -4,7 +4,8 @@
       <p>HAKO</p>
     </div>
     <div class="robotHead">
-      <img v-if="loading" class="gif" src="../assets/hako-loading.gif" alt="">
+      <img v-if="sleeping" class="gif" src="../assets/hako-sleep.gif" alt="">
+      <img v-if="thinking" class="gif" src="../assets/hako-loading.gif" alt="">
       <img src="../assets/hako-happy.png" alt="">
       <img class="hidden" src="../assets/hako-unhappy.png" alt="">
     </div>
@@ -33,6 +34,7 @@
 
 <script>
 import axios from "axios";
+import { setTimeout } from 'timers';
 
 export default {
     data() {
@@ -43,27 +45,28 @@ export default {
           }
           ],
           question: '',
-          loading:true,
+          sleeping:true,
+          thinking: false,
         }
     },
     name:'Chatbot',
     methods: {
         post() {
             this.chatlog.push({text:this.question.trim(), type:'Q'});
-            this.loading = true;
-            console.log(this.loading);
+            this.sleeping = false;
+            this.thinking = true;
+            console.log(this.thinking);
+
             this.$nextTick(() => {
                       this.scrollToEnd();
                     })
-            var headers = {
-                'Content-Type': 'application/json',
-                'Authorization': 'EndpointKey afdff838-d95c-40d3-a32d-b0488a1ee7e5' 
-            }
-            axios.post("https://qnabxl.azurewebsites.net/qnamaker/knowledgebases/09ae110d-19ea-407c-bbea-0c4cdf8383f3/generateAnswer", {"question":this.question} ,{headers: headers} ).then(response => {
+            axios.get("https://apihakobot.azurewebsites.net/api/values?question="+this.question).then(response => {
                 let botAnswer = response.data;
+                setTimeout(() => {
+                  this.thinking = false;
                   if (this.question.length > 1) {
                   this.question = '';
-                  this.chatlog.push({text:botAnswer.answers[0].answer, type:'R'});
+                  this.chatlog.push({text:botAnswer, type:'R'});
                   } else {
                     this.question = '';
                     this.chatlog.push({text:'How about you actually submit a question, genius.', type:'R'});
@@ -73,8 +76,10 @@ export default {
                   this.$nextTick(() => {
                       this.scrollToEnd();
                     })
+              }, 3000)
             })
-            this.loading = false
+            
+            
         },
         scrollToEnd: function() {
           var container = this.$el.querySelector('#truc');

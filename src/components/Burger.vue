@@ -28,3 +28,39 @@ export default {
 <style>
 
 </style>
+
+
+methods: {
+        post() {
+            this.chatlog.push({text:this.question.trim(), type:'Q'});
+            this.loading = true;
+            console.log(this.loading)
+            this.$nextTick(() => {
+                      this.scrollToEnd();
+                    })
+            var headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'EndpointKey afdff838-d95c-40d3-a32d-b0488a1ee7e5' 
+            }
+            axios.post("https://qnabxl.azurewebsites.net/qnamaker/knowledgebases/09ae110d-19ea-407c-bbea-0c4cdf8383f3/generateAnswer", {"question":this.question} ,{headers: headers} ).then(response => {
+                let botAnswer = response.data;
+                  if (this.question.length > 1) {
+                  this.question = '';
+                  this.chatlog.push({text:botAnswer.answers[0].answer, type:'R'});
+                  } else {
+                    this.question = '';
+                    this.chatlog.push({text:'How about you actually submit a question, genius.', type:'R'});
+                    
+                    
+                  }
+                  this.$nextTick(() => {
+                      this.scrollToEnd();
+                    })
+            })
+            this.loading = false
+        },
+        scrollToEnd: function() {
+          var container = this.$el.querySelector('#truc');
+          container.scrollTop = container.scrollHeight;
+        }
+    }
