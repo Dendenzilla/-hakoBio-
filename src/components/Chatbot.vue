@@ -1,13 +1,14 @@
 <template>
   <div class="chatbot">
     <div class="hako_title">
-      <p> HAKO</p>
+      <p>HAKO</p>
     </div>
     <div class="robotHead">
-      <img src="../assets/hako-happy.png">
+      <img v-if="loading" class="gif" src="../assets/hako-loading.gif" alt="">
+      <img src="../assets/hako-happy.png" alt="">
       <img class="hidden" src="../assets/hako-unhappy.png" alt="">
     </div>
-    <div class="chat">
+    <div class="chat" id="truc">
       <div v-for="(c,index) in chatlog" :key="index" class="tdiv" v-show="c.text">
           <div v-if="c.type === 'R'" >
             <div class="bubble bot">
@@ -41,13 +42,19 @@ export default {
             type:'R'
           }
           ],
-          question: ''
+          question: '',
+          loading:true,
         }
     },
     name:'Chatbot',
     methods: {
         post() {
             this.chatlog.push({text:this.question.trim(), type:'Q'});
+            this.loading = true;
+            console.log(this.loading);
+            this.$nextTick(() => {
+                      this.scrollToEnd();
+                    })
             var headers = {
                 'Content-Type': 'application/json',
                 'Authorization': 'EndpointKey afdff838-d95c-40d3-a32d-b0488a1ee7e5' 
@@ -60,8 +67,18 @@ export default {
                   } else {
                     this.question = '';
                     this.chatlog.push({text:'How about you actually submit a question, genius.', type:'R'});
+                    
+                    
                   }
+                  this.$nextTick(() => {
+                      this.scrollToEnd();
+                    })
             })
+            this.loading = false
+        },
+        scrollToEnd: function() {
+          var container = this.$el.querySelector('#truc');
+          container.scrollTop = container.scrollHeight;
         }
     }
 }
@@ -92,20 +109,29 @@ export default {
   width: 65px;
   & img {
     width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+  .gif{
+    z-index: 2;
   }
 }
+
 .hako_title {
   margin: 0 auto;
   padding: 10px;
   width: 200px;
   text-align: center;
   font-size: 13px;
+  font-weight: bold;
   & p {
     margin: 0;
   }
 }
 .chat {
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 325px;
   padding: 5px 12px 0 12px;
   width: 276px;
@@ -146,7 +172,7 @@ textarea {
   border-color:transparent;
   border-radius: 8px 0 0 8px;
   padding:5px;
-  // box-shadow: 3px 5px 15px #e0e6e8 inset;
+  font-size: 14px;
 }
 
 textarea:focus{
