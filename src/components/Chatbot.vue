@@ -207,6 +207,9 @@ export default {
   max-width: 80%;
   overflow-wrap: break-word;
   max-width: 210px;
+  & img {
+    width: 100%;
+  }
 }
 .chat p {
   margin: 0;
