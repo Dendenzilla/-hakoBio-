@@ -111,9 +111,11 @@ export default {
           setTimeout(() => {
                   this.sleeping = false;
                   this.$nextTick(() => {
+                    this.unhappy = false;
+                    this.thinking = false;
                     this.sleeping = true;
                     })
-              }, 8000)
+              }, 3000)
         // FIN FONCTION POST
         },
         scrollToEnd: function() {
