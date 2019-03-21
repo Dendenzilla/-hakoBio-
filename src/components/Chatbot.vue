@@ -82,15 +82,22 @@ export default {
                 if (response.data[0] === "I'm sorry but i can't answer your question. But i'm working on it ! Try again later.") {
                   this.unhappy = true;
                   this.sleeping = false;
-                  this.chatlog.push({text:botAnswer[0], type:'R'})
+                  botAnswer.forEach((a) => {
+                    this.chatlog.push({text:a, type:'R'})  
+                  })
                   this.$nextTick(() => {
                       this.scrollToEnd();
                     })
                 } else {
                 setTimeout(() => {
                   this.thinking = false;
-                  let repRef = botAnswer
-                  this.chatlog.push({text:botAnswer[0], type:'R'});
+                  botAnswer.forEach((a) => {
+                    if(/(http(s?):)([/|.|\w|%|-])*/i.test(a)){
+                      this.chatlog.push({text:a, type:'I'})
+                    }else{
+                      this.chatlog.push({text:a, type:'R'})
+                    }
+                  })
                   
                   this.$nextTick(() => {
                       this.scrollToEnd();
