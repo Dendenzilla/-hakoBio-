@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <router-link to="Burgers">Burgers</router-link>
   </div>
 </template>
 
@@ -13,7 +12,6 @@ export default {
 }
 </script>
 
-rout
 
 <style lang="scss">
 #app {

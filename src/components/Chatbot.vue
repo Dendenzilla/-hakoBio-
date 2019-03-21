@@ -6,21 +6,30 @@
     <div class="robotHead">
       <img v-if="sleeping" class="gif" src="../assets/hako-sleep.gif" alt="">
       <img v-if="thinking" class="gif" src="../assets/hako-loading.gif" alt="">
+      <img v-if="unhappy" class="gif" src="../assets/hako-unhappy.png" alt="">
       <img src="../assets/hako-happy.png" alt="">
-      <img class="hidden" src="../assets/hako-unhappy.png" alt="">
     </div>
     <div class="chat" id="truc">
       <div v-for="(c,index) in chatlog" :key="index" class="tdiv" v-show="c.text">
           <div v-if="c.type === 'R'" >
             <div class="bubble bot">
               <p>{{c.text}}</p>
+              <!-- <img :src="c.text" alt="img"> -->
             </div>
           </div>
+          <!--  -->
+          <div v-else-if="c.type === 'I'" >
+            <div class="bubble bot">
+              <img :src="c.text" alt="img"> 
+            </div>
+          </div>
+          <!--  -->
           <div v-else class="tdiv">
             <div class="bubble user">
               <p>{{c.text}}</p>
             </div>
           </div>
+          
       </div>
     </div>
     <div class="mouth">
@@ -47,9 +56,10 @@ export default {
             type:'R'
           }
           ],
-          question: '',
+          question: 'equipment',
           sleeping:true,
           thinking: false,
+          unhappy: false,
         }
     },
     name:'Chatbot',
@@ -61,23 +71,34 @@ export default {
             this.chatlog.push({text:userQ.trim(), type:'Q'});
           
             this.sleeping = false;
+            this.unhappy = false;
             this.thinking = true;
             this.$nextTick(() => {
                       this.scrollToEnd();
                     })
             axios.get("https://apihakobot.azurewebsites.net/api/values?question="+userQ).then(response => {
                 let botAnswer = response.data;
+                if (response.data[0] === "I'm sorry but i can't answer your question. But i'm working on it ! Try again later.") {
+                  this.unhappy = true;
+                  this.sleeping = false;
+                  this.chatlog.push({text:botAnswer[0], type:'R'})
+                  this.$nextTick(() => {
+                      this.scrollToEnd();
+                    })
+                } else {
                 setTimeout(() => {
                   this.thinking = false;
-                  
-                  this.chatlog.push({text:botAnswer[0]+botAnswer[1], type:'R'});
+                  let repRef = botAnswer
+                  this.chatlog.push({text:botAnswer[0], type:'R'});
                   
                   this.$nextTick(() => {
                       this.scrollToEnd();
                     })
-              }, 1200)
+                  
+              }, 1200)}
             })
             } else {
+            this.unhappy = true;
             this.question = '';
             this.chatlog.push({text:"You have not submitted a question, please do so.", type:'R'});
             this.$nextTick(() => {
@@ -87,7 +108,7 @@ export default {
           }
           //Sleep
           setTimeout(() => {
-                    this.sleeping = false;
+                  this.sleeping = false;
                   this.$nextTick(() => {
                     this.sleeping = true;
                     })
@@ -171,6 +192,7 @@ export default {
 .bubble {
   padding: 4px 10px;
   border-radius: 8px;
+  margin-top: 2px;
   margin-bottom: 8px;
   max-width: 80%;
   overflow-wrap: break-word;
