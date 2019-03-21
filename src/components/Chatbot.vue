@@ -79,7 +79,7 @@ export default {
                     })
             axios.get("https://apihakobot.azurewebsites.net/api/values?question="+userQ).then(response => {
                 let botAnswer = response.data;
-                if (response.data[0] === "I'm sorry but i can't answer your question. But i'm working on it ! Try again later.") {
+                if (response.data[0] === "I'm sorry but i can't answer your question. But i'm working on it ! Try again later. If you want to send your question by mail to be reviewed type '' @mail : Your Question. ''") {
                   this.unhappy = true;
                   this.sleeping = false;
                   botAnswer.forEach((a) => {
