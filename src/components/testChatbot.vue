@@ -26,7 +26,8 @@
     <div class="mouth">
       <form>
         <textarea rows="3" v-model="question" v-on:keyup.enter="post()" placeholder="Type your question here"></textarea>
-        <button @click.prevent="post()" >Ask <br>Hako</button>
+        <button @click.prevent="post()">Ask <br>Hako</button>
+
       </form>
     </div>
   </div>
@@ -40,10 +41,7 @@ export default {
     data() {
         return {
           chatlog: [{
-            text:`Hi I'm Hako !`,
-            type:'R'
-          }, {
-            text:'Can I help you ?',
+            text:`Hi I'm Hako ! Can I help you ?`,
             type:'R'
           }
           ],
@@ -52,7 +50,7 @@ export default {
           thinking: false,
         }
     },
-    name:'Chatbot',
+   name:'Chatbot',
     methods: {
         post() {
           if (this.question.length > 1) {
@@ -69,9 +67,7 @@ export default {
                 let botAnswer = response.data;
                 setTimeout(() => {
                   this.thinking = false;
-                  
                   this.chatlog.push({text:botAnswer[0]+botAnswer[1], type:'R'});
-                  
                   this.$nextTick(() => {
                       this.scrollToEnd();
                     })
@@ -85,13 +81,12 @@ export default {
                     })
             return;
           }
-          //Sleep
           setTimeout(() => {
                     this.sleeping = false;
                   this.$nextTick(() => {
                     this.sleeping = true;
                     })
-              }, 8000)
+              }, 10000)
         // FIN FONCTION POST
         },
         scrollToEnd: function() {
@@ -100,7 +95,6 @@ export default {
         }
     }
 }
-
 
 </script>
 

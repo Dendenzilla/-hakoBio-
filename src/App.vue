@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
+    <router-link to="Burgers">Burgers</router-link>
   </div>
 </template>
 
@@ -11,6 +12,8 @@ export default {
   name: 'app'
 }
 </script>
+
+rout
 
 <style lang="scss">
 #app {

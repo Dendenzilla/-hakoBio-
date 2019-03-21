@@ -1,19 +1,20 @@
 <template>
-<div>
-    <div>buuuuuuurgers</div>
-    <Burger/>
+    <div>
+        <testChatbot/>
     </div>
 </template>
 
 <script>
-import Burger from '../components/Burger.vue'
+import testChatbot from '../components/testChatbot.vue'
 export default {
-    components: {
-        Burger
-    }
+name:'home',
+components: {
+    testChatbot
+  }
 }
 </script>
 
 <style>
 
 </style>
+
