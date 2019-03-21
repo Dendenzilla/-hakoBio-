@@ -56,7 +56,7 @@ export default {
             type:'R'
           }
           ],
-          question: 'equipment',
+          question: '',
           sleeping:true,
           thinking: false,
           unhappy: false,
@@ -65,6 +65,7 @@ export default {
     name:'Chatbot',
     methods: {
         post() {
+          this.sleeping = false;
           if (this.question.length > 1) {
             let userQ = this.question;
             this.question = '';
