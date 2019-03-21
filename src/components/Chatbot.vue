@@ -115,7 +115,7 @@ export default {
                     this.thinking = false;
                     this.sleeping = true;
                     })
-              }, 3000)
+              }, 10000)
         // FIN FONCTION POST
         },
         scrollToEnd: function() {
